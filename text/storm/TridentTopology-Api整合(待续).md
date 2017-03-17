@@ -110,6 +110,37 @@ partitionAggregate和aggregate的区别是aggregate有隐含的分区操作(glob
 当调用了持久化操作后(persistentAggregate、partitionPersist),会返回TridentState的对象(以下称这个对象为state)，这个state里记录了持久的所有结果，如，在统计单词的示例中，state代表的是所有的单词的数量，可以理解成一个记录了所有持久化结果的对象，使用**stateQuery**方法可以在state中进行查询。  
 *示例见example3*
 
+
+**setCPULoad**: 设置当前线程cpu分配比例，默认是10(0~100表示百分比)。
+
+**setMemoryLoad**:  可设置当前线程onheap/offheap的内存比例。为创建缓存onheap的大小和清除缓存offheap剩余的大小，默认onheap为128，offheap为0。
+
+**map** : 可视为运算之一，含义为map...Returns a stream consisting of the result of applying the given mapping function to the values of this stream.运算的输入是数据tuple, 输出是新发射的values...
+
+**flatMap** : 这个跟map有点类似，区别在于适用于一对多的情况。拿wordCount的例子来说，句子分割成单词的部分就适合使用flatMap,单词若是每个单词都转换成小写的功能就适合使用map。    
+[示例地址](https://github.com/apache/storm/blob/master/examples/storm-starter/src/jvm/org/apache/storm/starter/trident/TridentMapExample.java)
+
+
+
+**ChainedAggregatorDeclarer**
+
+**minBy**
+**min**
+**maxBy**
+**max** : 看起来内部实现的是聚合，应该是根据比较器，直接聚合返回min/max的tuple.
+
+**comparableAggregateStream**
+
+**peek** :    Returns a stream consisting of the trident tuples of this stream, additionally performing the provided action on each trident tuple as they are consumed from the resulting stream. This is mostly useful for debugging to see the tuples as they flow past a certain point in a pipeline.
+
+**tumblingWindow**  tumbling窗口技术
+
+**slidingWindow**  平滑窗口技术
+
+**window** 窗口
+
+**addTriggerField**
+
 ### Example
 
 ####example1 -- 并发度设置
