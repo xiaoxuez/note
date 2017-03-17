@@ -24,7 +24,7 @@ Storm允许用户和管理员从Storm UI和命令行动态更改正在运行的t
 #### 1.1 通过Storm UI启用
 
 要设置级别，请单击正在运行的topology，然后单击topology actions部分中的“Change Log Level”。    
-[](https://github.com/xiaoxuez/note/blob/master/img/storm/topology-logger-figure1.png)    
+![图1](../../img/storm/topology-logger-figure1.png)    
 图1：更改topology的日志级别。
 
 接下来，提供logger名称，选择所需的级别（例如WARN）和以秒为单位的超时(如果不需要，则为0),然后点击“Add”。
@@ -33,7 +33,7 @@ Storm允许用户和管理员从Storm UI和命令行动态更改正在运行的t
 
 要清除日志级别，请单击“清除”按钮。这会将日志级别恢复为添加设置之前的日志级别。日志级别行将从UI中消失。
 
-![](https://github.com/xiaoxuez/note/blob/master/img/storm/topology-logger-figure2.png =100)  
+![图2](../../img/storm/topology-logger-figure2.png)
 
 图2: 清除动态的日志级别
 
@@ -66,13 +66,13 @@ Topology Event logging 提供了当tuples流经storm topology中的不同阶段�
 可以通过单击topology视图中的topology操作下的“Debug”按钮来logging enents。 这将按照指定的抽样百分比从topology中的所有spout和bolt记录tuples。
 
 
-![](https://github.com/xiaoxuez/note/blob/master/img/storm/topology-logger-figure3.png =100) 
+![图3](../../img/storm/topology-logger-figure3.png)
  
 图3: 在topology级别启用事件日志记录
 
 您还可以通过转到相应的组件页面并在组件操作下单击“Debug”来在特定的spout或bolt级别启用事件记录。
 
-![](https://github.com/xiaoxuez/note/blob/master/img/storm/topology-logger-figure4.png =100)  
+![图4](../../img/storm/topology-logger-figure4.png)
 
 图4：在组件级别启用事件日志记录。
 
@@ -82,7 +82,7 @@ storm “logviewer” 应该运行以查看记录的tuples。 如果尚未运行
 
 这将打开一个视图，如下所示，您可以在不同的页面之间导航和查看记录的tuples。
 
-![](https://github.com/xiaoxuez/note/blob/master/img/storm/topology-logger-figure5.png =100)  
+![图5](../../img/storm/topology-logger-figure5.png) 
 
 图5：查看记录的事件。
 
@@ -94,7 +94,7 @@ storm “logviewer” 应该运行以查看记录的tuples。 如果尚未运行
 
 通过单击Storm UI中的topology或组件操作下的“Stop Debug”，可以在特定组件或topology级别禁用event logs。
 
-![](https://github.com/xiaoxuez/note/blob/master/img/storm/topology-logger-figure6.png =100)  
+![图6](../../img/storm/topology-logger-figure6.png) 
 
 图6：在topology级禁用event logs。
 
@@ -137,7 +137,7 @@ Storm提供了由event logger bolt用来记录事件的IEventLogger接口。默�
 
 Storm的UI的另一个改进是添加了分布式日志搜索。 此功能允许用户搜索特定topology的所有日志文件，包括归档日志。搜索结果将包括所有supervisor节点的匹配项。
 
-![](https://github.com/xiaoxuez/note/blob/master/img/storm/topology-logger-figure7.png =100)  
+![图7](../../img/storm/topology-logger-figure7.png)
 
 图7：分布式日志搜索输出
 
@@ -151,13 +151,13 @@ Storm的UI的另一个改进是添加了分布式日志搜索。 此功能允许
 
 生成的文件可用于通过各种调试工具的日志查看器下载以进行离线分析。 现在也可以通过Storm UI重新启动工作。
 
-![](https://github.com/xiaoxuez/note/blob/master/img/storm/topology-logger-figure8.png =100)  
+![图8](../../img/storm/topology-logger-figure8.png) 
 
 图8：分析和调试工作程序
 
 通过切换到相应的文件，可以从工作日志查看器UI查看输出。
 
-![](https://github.com/xiaoxuez/note/blob/master/img/storm/topology-logger-figure9.png =100)  
+![图9](../../img/storm/topology-logger-figure9.png) 
 
 图9：从Storm UI查看的Jstack输出
 
