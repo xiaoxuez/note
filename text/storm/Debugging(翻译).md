@@ -24,7 +24,7 @@ Storm允许用户和管理员从Storm UI和命令行动态更改正在运行的t
 #### 1.1 通过Storm UI启用
 
 要设置级别，请单击正在运行的topology，然后单击topology actions部分中的“Change Log Level”。    
-![](https://github.com/xiaoxuez/note/blob/master/img/storm/topology-logger-figure1.png =100)    
+[](https://github.com/xiaoxuez/note/blob/master/img/storm/topology-logger-figure1.png)    
 图1：更改topology的日志级别。
 
 接下来，提供logger名称，选择所需的级别（例如WARN）和以秒为单位的超时(如果不需要，则为0),然后点击“Add”。
