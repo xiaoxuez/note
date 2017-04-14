@@ -99,7 +99,7 @@ partitionAggregate和aggregate的区别是aggregate有隐含的分区操作(glob
 
 + Fields getOutputFields()
 
-**applyAssembly**：暂时没找到相关介绍，但看Api代码，有可能是替换流。
+**applyAssembly**：暂时没找到相关介绍，但看Api代码，有可能是配置。
 
 + Stream applyAssembly(Assembly assembly)
 
@@ -137,7 +137,10 @@ partitionAggregate和aggregate的区别是aggregate有隐含的分区操作(glob
 
 **slidingWindow**  平滑窗口技术
 
-**window** 窗口
+**window** 窗口    
+[窗口技术的使用和例子](http://www.cnblogs.com/swanspouse/p/5130117.html)    
+[官方讲解](http://storm.apache.org/releases/1.0.0/Windowing.html)    
+窗口技术用于在一定间隔中统计最近数据，滑动窗口中，窗口长度是5条，边缘是3条，数据是12345678进入的会分成，12345， 45678这样的。窗口长度和边缘都可以是长度或者是时间。例如10s间隔统计最近20条的数据
 
 **addTriggerField**
 

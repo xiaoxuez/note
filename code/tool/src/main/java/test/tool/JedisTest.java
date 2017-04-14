@@ -26,6 +26,7 @@ public class JedisTest {
 	public static synchronized void initPool() {
 		if (jedisPool == null) {
 			jedisPool = new JedisPool(getConfig(), host, port, 2000, password);
+//			jedisPool = new JedisPool("redis://114.55.237.238:6379/1");
 		}
 	}
 
@@ -58,9 +59,9 @@ public class JedisTest {
 	
 	
 	public static void main(String[] args) {
-		JedisPool pool =  new JedisPool(getConfig(), host, port, 2000);
+		JedisPool pool =  new JedisPool("redis://:password@114.55.237.238:6379");
 		Jedis jedis = pool.getResource();
-		System.out.println(jedis.smembers("test"));
+		System.out.println(jedis.smembers("production_tcp_connections"));
 	}
 	
 	public static void loadLuaScript() {
