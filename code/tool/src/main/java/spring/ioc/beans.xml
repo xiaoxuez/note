@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:context="http://www.springframework.org/schema/context"
+        xmlns:tx="http://www.springframework.org/schema/tx"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+                http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
+                http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
+
+    <bean id="userDaoImpl" class = "spring.ioc.UserDaoImp"/>
+    <bean id="userDaoImplFactoryStaticMethod" class = "spring.ioc.UserDaoFactory" factory-method = "getUserDao"/>
+    <bean id="factory" class="spring.ioc.UserDaoFactory2"/>
+    <bean id="userDaoImplFactoryInstanceMethod" factory-bean="factory" factory-method="getUserDao"/>
+    <bean id="userDaoImplScopeSingleton" class = "spring.ioc.UserDaoImp" scope="singleton"/>
+    <bean id="userDaoImplScopePrototype" class = "spring.ioc.UserDaoImp" scope="prototype"/>
+    
+    
+    <bean id="setAttribute" class="spring.ioc.UserServiceBean">
+    </bean>
+</beans>    
