@@ -9,9 +9,9 @@ import redis.clients.jedis.JedisPoolConfig;
 
 public class JedisTest {
 	private static JedisPool jedisPool = null;
-	private static String host = "127.0.0.1";
+	private static String host = "115.29.9.156";
 	private static int port = 6379;
-	private static String password = "";
+	private static String password = "dFyF9yygzfDeGZYQZCvJEHjwuejFEFMdrmSrtJzW";
 
 	public static JedisPoolConfig getConfig() {
 		JedisPoolConfig configJedis = new JedisPoolConfig();
@@ -59,9 +59,10 @@ public class JedisTest {
 	
 	
 	public static void main(String[] args) {
-		JedisPool pool =  new JedisPool("redis://:password@114.55.237.238:6379");
+		JedisPool pool =  new JedisPool("redis://:dFyF9yygzfDeGZYQZCvJEHjwuejFEFMdrmSrtJzW@115.29.9.156:6379");
 		Jedis jedis = pool.getResource();
-		System.out.println(jedis.smembers("production_tcp_connections"));
+		pool.returnBrokenResource(jedis);
+//		System.out.println(jedis.smembers("production_tcp_connections"));
 	}
 	
 	public static void loadLuaScript() {
