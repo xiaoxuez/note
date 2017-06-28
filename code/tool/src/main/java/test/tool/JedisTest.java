@@ -59,8 +59,9 @@ public class JedisTest {
 	
 	
 	public static void main(String[] args) {
-		JedisPool pool =  new JedisPool("redis://:dFyF9yygzfDeGZYQZCvJEHjwuejFEFMdrmSrtJzW@115.29.9.156:6379");
+		JedisPool pool =  new JedisPool("redis://:foobared@127.0.0.1:6379");
 		Jedis jedis = pool.getResource();
+		System.out.println(jedis ==null);
 		pool.returnBrokenResource(jedis);
 //		System.out.println(jedis.smembers("production_tcp_connections"));
 	}

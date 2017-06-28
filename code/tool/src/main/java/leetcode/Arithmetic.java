@@ -216,13 +216,176 @@ public class Arithmetic {
 		return delete;
 	}
 
+	/**
+	 * 592. Fraction Addition and Subtraction Input:"-1/2+1/2" Output: "0/1"
+	 * 解题思路： 拆分数据，进行计算。
+	 * 
+	 * @param expression
+	 * @return
+	 */
+	public String fractionAddition(String expression) {
+		List<Character> sign = new ArrayList<>();
+		for (int i = 1; i < expression.length(); i++) {
+			if (expression.charAt(i) == '+' || expression.charAt(i) == '-')
+				sign.add(expression.charAt(i));
+		}
+		// 分子
+		List<Integer> num = new ArrayList<>();
+		// 分母
+		List<Integer> den = new ArrayList<>();
+		for (String sub : expression.split("\\+")) {
+			for (String subsub : sub.split("-")) {
+				if (subsub.length() > 0) {
+					String[] fraction = subsub.split("/");
+					num.add(Integer.parseInt(fraction[0]));
+					den.add(Integer.parseInt(fraction[1]));
+				}
+			}
+		}
+		// 第一个数据是正的则忽略+.但是负的则不忽略，所以需要特殊处理
+		if (expression.charAt(0) == '-')
+			num.set(0, -num.get(0));
+		// mul为所有分母乘积， g为最大公约数。 那么最小公倍数就为mul/g
+		int mul = 1, g = 0;
+		for (int x : den) {
+			mul *= x;
+			g = gcd(g, x);
+		}
+		int lcm = mul / g;
+		int res = lcm / den.get(0) * num.get(0); // 第一个数比较特别，所以单独存放，这里是计算所有分子之和。
+		for (int i = 1; i < num.size(); i++) {
+			if (sign.get(i - 1) == '+')
+				res += lcm / den.get(i) * num.get(i);
+			else
+				res -= lcm / den.get(i) * num.get(i);
+		}
+		g = gcd(Math.abs(res), Math.abs(lcm));
+		return (res / g) + "/" + (lcm / g);
+	}
+
+	public int gcd(int a, int b) {
+		while (b != 0) {
+			int t = b;
+			b = a % b;
+			a = t;
+		}
+		return a;
+	}
+
+	/**
+	 * 452. Minimum Number of Arrows to Burst Balloons Input: [[10,16], [2,8],
+	 * [1,6], [7,12]]
+	 * 
+	 * Output: 2
+	 * 
+	 * @param args
+	 */
+	public int findMinArrowShots(int[][] points) {
+		List<List<Integer>> sets = new ArrayList<>();
+		for (int i = 0; i < points.length; i++) {
+			boolean newSet = false;
+			for (List<Integer> list : sets) {
+				if ((points[i][1] >= list.get(0) && points[i][1] <= list.get(1))
+						|| (points[i][1] >= list.get(1) && points[i][0] <= list.get(1))) {
+
+				}
+			}
+		}
+		return sets.size();
+	}
+
+	/**
+	 * 137. Single Number II Given an array of integers, every element appears
+	 * three times except for one, which appears exactly once. Find that single
+	 * one. 解题思路，其他的数都出现了3次，只要一个数出现了一次,
+	 * 相加的话，出现3次的数的和一定是3的整数。也就是说如果这些数都比3小的话，求和取3的余就能得答案。
+	 * 所以转换一下思想，如果是3进制的加法的话，某一个加到了3就清零(取3的余)，那么加到最后剩下的数就是答案。
+	 * 最后，采用二进制模拟3进制，二进制的加法，需要有存放进位，存放无进位的和的变量，当和与进位对应位上都为1的情况下，就说明现在对应位上加到了3，应该清零了。
+	 * 
+	 * @param args
+	 */
+
+	public int singleNumber(int[] nums) {
+		int sums = 0, carrys = 0;
+		for (int i = 0; i < nums.length; i++) {
+			carrys |= sums & nums[i]; // 进位，
+										// sums与nums[i]为当前是否有进位，总进位应该跟当前进行或取所有位的进位
+			sums ^= nums[i]; // 无进位的加法 就是异或
+			// 判断是否有3
+
+			int full = ~(carrys & sums); // 对应位都为1的情况,应该清零，后面用&方便一点的话，所以应该取反
+			carrys = full & carrys;
+			sums = full & sums;
+		}
+		return sums;
+	}
+
+	public int jump(int[] nums) {
+//		return jumpToMax(nums, 0, 0);
+		
+		if (nums.length <= 1) {
+			return nums.length % 1;
+		}
+		int start = 0, count = 1, max = 0, end = nums[0];
+		for (int i = 1; i < nums.length; i++) {
+			if (nums[i] > nums[max]) {
+				max = i;
+			}
+			if (i == end) {
+				if (max == start) {
+					start = end;
+				} else {
+					start = max;
+				}
+				count ++;
+//				max = ;
+				end = i + nums[i];
+				
+				if (end >= nums.length - 1) {
+					break;
+				}
+				
+			}
+			System.out.println(" i= " + i+", max=" + max + ", end=" + end + " , count=" + count);
+		}
+		return count;
+	}
+
+//	public int jumpToMax(int[] nums, int index, int count) {
+		
+//		if (index == nums.length - 1) {
+//			return count;
+//		}
+//		count ++;
+//		
+//		if (nums[index] >= nums.length - index) {
+//			return count;
+//		}
+//		int maxI = index + 1;
+//		for (int i = index + 2; i <= index + nums[index]; i++) {
+//			if (i == nums.length - 1) {
+//				return count;
+//			}
+//			if (nums[i] > nums[maxI]) {
+//				maxI = i;
+//			}
+//		}
+		
+//		return jumpToMax(nums, maxI, count);
+//	}
+
 	public static void main(String[] args) {
 		Arithmetic a = new Arithmetic();
-		System.out.println(new Date().getTime());
-		List<Integer> all = a.killProcess(Arrays.asList(1, 3, 10, 5), Arrays.asList(3, 0, 5, 3), 5);
-		System.out.println(new Date().getTime());
-		for (Integer integer : all) {
-			System.out.println(integer);
-		}
+		int[] nums = {1, 2, 3};
+		int[] nums1 = {2, 1};
+		int[] nums3 = {2, 3, 1, 1, 4};
+		int[] nums4 = {1, 2, 1, 1, 1};
+		int[] nums5 =  {3, 1, 1, 1, 1};
+		
+//		System.out.println(a.jump(nums));
+//		System.out.println(a.jump(nums1));
+		System.out.println(a.jump(nums3));
+		System.out.println(a.jump(nums4));
+//		System.out.println(a.jump(nums5));
 	}
 }
