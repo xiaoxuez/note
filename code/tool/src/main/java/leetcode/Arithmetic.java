@@ -320,9 +320,42 @@ public class Arithmetic {
 		return sums;
 	}
 
+	/**
+	 * 260. Single Number III Given an array of numbers nums, in which exactly
+	 * two elements appear only once and all the other elements appear exactly
+	 * twice. Find the two elements that appear only once. For example: Given
+	 * nums = [1, 2, 1, 3, 2, 5], return [3, 5]. Note: The order of the result
+	 * is not important. So in the above example, [5, 3] is also correct.
+	 * 这个题吧，说实话很忧桑.... 看了别人的答案发现别人真机智... 反正我是想不到这个答案。还是开始解题吧,以上例为例
+	 * 1.首先，其他的都只出现了2次，很明显这个题用异或。关键在于一次全部异或的结果是3^5，难点在于怎么把这个3和5分解出来。
+	 * 2.还是从其他的都出现了2次入手，如果能将3和5分开进行异或，就是根据某个规则，if/else 3和5分别被分到两个分支中进行异或..
+	 * 最后就有结果啦。 那么规则是什么呢，3和5都只出现了一次，3^5的结果肯定不会都是0，肯定某位上有1.那么根据这个1，这个1的得来是
+	 * 3和5中相应对应位为1，相应为0,只要把这1位置为1其他的置为0，那么和3或5进行与的结果就是0和1.
+	 * 
+	 * @param nums
+	 * @return
+	 */
+	public int[] singleNumber3(int[] nums) {
+		int axorb = 0;
+		for (int i : nums) {
+			axorb = axorb ^ i;
+		}
+
+		int differ = axorb & ~(axorb - 1);
+		int[] results = new int[2];
+		for (int i : nums) {
+			if ((differ & i) == 0) {
+				results[0] = results[0]^i;
+			} else {
+				results[1] = results[1]^i;
+			}
+		}
+		return results;
+	}
+
 	public int jump(int[] nums) {
-//		return jumpToMax(nums, 0, 0);
-		
+		// return jumpToMax(nums, 0, 0);
+
 		if (nums.length <= 1) {
 			return nums.length % 1;
 		}
@@ -337,55 +370,53 @@ public class Arithmetic {
 				} else {
 					start = max;
 				}
-				count ++;
-//				max = ;
+				count++;
+				// max = ;
 				end = i + nums[i];
-				
+
 				if (end >= nums.length - 1) {
 					break;
 				}
-				
+
 			}
-			System.out.println(" i= " + i+", max=" + max + ", end=" + end + " , count=" + count);
+			System.out.println(" i= " + i + ", max=" + max + ", end=" + end + " , count=" + count);
 		}
 		return count;
 	}
 
-//	public int jumpToMax(int[] nums, int index, int count) {
-		
-//		if (index == nums.length - 1) {
-//			return count;
-//		}
-//		count ++;
-//		
-//		if (nums[index] >= nums.length - index) {
-//			return count;
-//		}
-//		int maxI = index + 1;
-//		for (int i = index + 2; i <= index + nums[index]; i++) {
-//			if (i == nums.length - 1) {
-//				return count;
-//			}
-//			if (nums[i] > nums[maxI]) {
-//				maxI = i;
-//			}
-//		}
-		
-//		return jumpToMax(nums, maxI, count);
-//	}
+	// public int jumpToMax(int[] nums, int index, int count) {
+
+	// if (index == nums.length - 1) {
+	// return count;
+	// }
+	// count ++;
+	//
+	// if (nums[index] >= nums.length - index) {
+	// return count;
+	// }
+	// int maxI = index + 1;
+	// for (int i = index + 2; i <= index + nums[index]; i++) {
+	// if (i == nums.length - 1) {
+	// return count;
+	// }
+	// if (nums[i] > nums[maxI]) {
+	// maxI = i;
+	// }
+	// }
+
+	// return jumpToMax(nums, maxI, count);
+	// }
 
 	public static void main(String[] args) {
 		Arithmetic a = new Arithmetic();
-		int[] nums = {1, 2, 3};
-		int[] nums1 = {2, 1};
-		int[] nums3 = {2, 3, 1, 1, 4};
-		int[] nums4 = {1, 2, 1, 1, 1};
-		int[] nums5 =  {3, 1, 1, 1, 1};
-		
-//		System.out.println(a.jump(nums));
-//		System.out.println(a.jump(nums1));
-		System.out.println(a.jump(nums3));
-		System.out.println(a.jump(nums4));
-//		System.out.println(a.jump(nums5));
+		int[] nums = { 1, 2, 3 };
+		int[] nums1 = { 2, 1 };
+		int[] nums3 = { 2, 3, 1, 1, 4 };
+		int[] nums4 = { 1, 2, 1, 2, 5, 3 };
+		int[] nums5 = { 3, 1, 1, 1, 1 };
+
+		for (int i : a.singleNumber3(nums4)) {
+			System.out.println(i);
+		}
 	}
 }
