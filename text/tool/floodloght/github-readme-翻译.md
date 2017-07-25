@@ -1,0 +1,12 @@
+上面的概念下面将进一步讨论，但主要记录的是Builder设计模式的易用性和不可变对象的production(Buidler和production都是设计模式），production的对象的使用，代替了强制类型安全编码的原始类型，并且产生的是更多的可读性代码，内置的通配形式，以及最后没有必要去处理消息的长度。(这段话的对比是Pre-v1.0和Floodlight v1.0, v1.1, v1.2，可见readme中这段话的前面代码对比)
+
+所有的连接到Floodloght的switches都包含一个switch描述Openflow版本的工厂。可以有多种switch,所有都是不同版本的Openflow，在那些swicth中，controller会幕后处理低级协议差异。从模块和应用开发人员的角度来看，switch是暴露出来的IOFSwitch, IOFSwitch的方法之一getOFFactory能返回OpenFlowJ-Loxi工厂，适合switch描述的OpenFlow版本。一旦你有了正确的工厂，你就可以通过公共的OpenFlowJ-Loxi暴露的API创建OpenFlow类型和概念。
+
+因此，你在编写FlowMods和其他类型的时候不需要切换Api。例如，假设你想构建一个FlowMod，发送到一个switch上，OFSwitchManager已知的每一个switch都有一个相同版本的OpenFlow工厂的引用。这个引用在于协商switch和controller之间最初的握手。故上述整体过程是，从你的switch引用工厂，创建buidler，构建FlowMod, 并写到switch.忽略OpenFlow版本的话，所有OpenFlow对象的构造器是相同的API，但是你需要知道你可以使用的每一个OpenFlow版本，否则，例如你告诉一个OpenFlow1.0的switch去执行一些类似添加组的操作，而这个操作在1.0中并不支持，OpenFlowJ-Loxi库会使用一个UnsupportedOperationException友好提醒你。
+
+介绍其他一些微妙的为了变得很好变化。例如，许多常见的类型，如交换机交换机datapath ids, openflow ports, ip mac 地址被定义到OpenFlowJ-Loxi库中，通过DatapathId, OFPort, IPv4Address/IPv6Address, and MacAddress。你可以搜索org.projectfloodlight.openflow.types，能发现很多常见的可以被定义到单一位置的类型，像上面的buidlers中的produced对象，所有的类型都是不可变的。
+
+
+更多新的API在Floodlight v1.2中，参阅[OpenFlowJ-Loxi文档和例子](https://floodlight.atlassian.net/wiki/display/floodlightcontroller/How+to+use+OpenFlowJ-Loxigen)
+
+
