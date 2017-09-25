@@ -14,7 +14,6 @@ public class App
 		return reverse(pre.substring(1)) + pre.charAt(0);
 	}
 	public static void main(String[] args) {
-		String abc = "abc";
-		System.out.println(reverse(abc));
+		throw new NullPointerException();
 	}
 }

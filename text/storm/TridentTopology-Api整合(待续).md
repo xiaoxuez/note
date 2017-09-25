@@ -57,6 +57,8 @@
 
 ****
 
+<font color="red">聚合操作的单位是batch</font>
+
 **partitionAggregate** ：聚合操作，前提是在partition上，一个batch被分成多个partition后，每个partition都会单独运行partitionAggregate中指定的聚合操作
 
 + Stream partitionAggregate(Fields inputFields, CombinerAggregator agg, Fields functionFields)

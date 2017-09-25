@@ -22,7 +22,7 @@ public class Tree {
 	 */
 	// 题意分析 中序遍历
 	public List<Integer> inorderTraversal(TreeNode root) {
-		List<Integer> list = new ArrayList<>();
+		List<Integer> list = new ArrayList<Integer>();
 		if (root != null) {
 			addValueToList(root, list);
 		}

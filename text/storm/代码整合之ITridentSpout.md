@@ -1,5 +1,6 @@
 #代码整合之ITridentSpout
 
+
 主要示例代码出自第三章。
 #### 实现ITridentSpout的类 -- DiagnosisEventSpout
 	public class DiagnosisEventSpout implements ITridentSpout<Long>{
@@ -95,3 +96,6 @@ BatchCoordinator是一个泛型类，这个泛型类是重放一个batch所需�
 		
 	}
 Emitter只有一个功能，将tuple打包发射出去。 此处留意的是，tuple中所有的元素都必须是可序列化的。
+
+
+

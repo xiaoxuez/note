@@ -58,11 +58,21 @@ public class JedisTest {
 	}
 	
 	
-	public static void main(String[] args) {
-		JedisPool pool =  new JedisPool("redis://:foobared@127.0.0.1:6379");
+	public static void main(String[] args) throws InterruptedException {
+		JedisPool pool =  new JedisPool("redis://:foobared@114.55.24.147:6379");
 		Jedis jedis = pool.getResource();
-		System.out.println(jedis ==null);
-		pool.returnBrokenResource(jedis);
+
+//		System.out.println(" before adjust : " + jedis.hget("airguru_house:11419", "vent_volumn") + " + " + jedis.hget("airguru_house:11419", "vent_adjust"));
+//		jedis.publish("router_online", ": 1}}");
+//
+//		Thread.sleep(1000);
+
+		System.out.println(" after 1s adjust : " + jedis.hget("airguru_house:11419", "vent_volumn") + " + " + jedis.hget("airguru_house:11419", "vent_adjust"));
+
+
+//		Thread.sleep(1000 * 60);
+//		System.out.println(" after 1m adjust : " + jedis.hget("airguru_house:11419", "vent_volumn") + " + " + jedis.hget("airguru_house:11419", "vent_adjust"));
+
 //		System.out.println(jedis.smembers("production_tcp_connections"));
 	}
 	

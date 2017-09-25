@@ -1,17 +1,6 @@
 package leetcode;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Queue;
-import java.util.Random;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import org.springframework.core.env.SystemEnvironmentPropertySource;
@@ -74,8 +63,8 @@ public class Arithmetic {
 	/**
 	 * 500. Keyboard Row 满足条件为键盘上在一排的单词
 	 * 
-	 * @param args
-	 *            Input: ["Hello", "Alaska", "Dad", "Peace"] Output: ["Alaska",
+	 *
+	 * input : ["Hello", "Alaska", "Dad", "Peace"] Output: ["Alaska",
 	 *            "Dad"]
 	 */
 	// 一开始想的是将键盘上的字母存起来再匹配，发现还有正则的。
@@ -138,7 +127,7 @@ public class Arithmetic {
 	 * 就是说这个数组里的数都是小于长度n的且大于1的，如果以数作为下标索引a数组，若数重复出现，则索引重复出现。 故 索引后进行计算+n，
 	 * 若有重复的数，进行计算的次数一定>1, 所以最后判断计算的结果是否>2n即可，
 	 * 
-	 * @param args
+	 * @param
 	 */
 	public List<Integer> findDuplicates(int[] nums) {
 		List<Integer> result = new ArrayList<Integer>();
@@ -186,7 +175,7 @@ public class Arithmetic {
 	 * 第二个数组对应的是ppid Input: pid = [1, 3, 10, 5] ppid = [3, 0, 5, 3] kill = 5
 	 * Output: [5,10] Explanation: 3 / \ 1 5 / 10 Kill 5 will also kill 10.
 	 * 
-	 * @param args
+	 * @param
 	 */
 	public List<Integer> killProcess(List<Integer> pid, List<Integer> ppid, int kill) {
 		Map<Integer, Set<Integer>> allFatherSon = new HashMap<>();
@@ -278,7 +267,7 @@ public class Arithmetic {
 	 * 
 	 * Output: 2
 	 * 
-	 * @param args
+	 * @param
 	 */
 	public int findMinArrowShots(int[][] points) {
 		List<List<Integer>> sets = new ArrayList<>();
@@ -302,7 +291,7 @@ public class Arithmetic {
 	 * 所以转换一下思想，如果是3进制的加法的话，某一个加到了3就清零(取3的余)，那么加到最后剩下的数就是答案。
 	 * 最后，采用二进制模拟3进制，二进制的加法，需要有存放进位，存放无进位的和的变量，当和与进位对应位上都为1的情况下，就说明现在对应位上加到了3，应该清零了。
 	 * 
-	 * @param args
+	 * @param
 	 */
 
 	public int singleNumber(int[] nums) {
@@ -407,16 +396,267 @@ public class Arithmetic {
 	// return jumpToMax(nums, maxI, count);
 	// }
 
+	/**
+	 *
+	 * Suppose you have a random list of people standing in a queue. Each person is described by a pair of integers (h, k), where h is the height of the person and k is the number of people in front of this person who have a height greater than or equal to h. Write an algorithm to reconstruct the queue.
+	 * @param people
+	 * @return
+	 * Input:
+	 *[[7,0], [4,4], [7,1], [5,0], [6,1], [5,2]]
+	 *Output:
+	 *[[5,0], [7,0], [5,2], [6,1], [4,4], [7,1]]
+	 *
+	 * TODO: 还没解决，看网上的解法，和我想法类似，排序想法是一样的，就是装的不一样，我的想法是排一次序，慢慢装，看网上的
+	 * 是循环次次排，并且给每一个数据加一项，[h, n] => [h, n',m],m为结果里已经放了比它大的个数， n' + m = n, 然后次次按n和h排，
+	 * 每一次放入结果的数即为第一个。
+	 */
+	public int[][] reconstructQueue(int[][] people) {
+		List<People> people1 = new ArrayList<>();
+		for (int i = 0; i < people.length; i++) {
+			people1.add(new People(people[i][0], people[i][1]));
+		}
+		Collections.sort(people1);
+		LinkedList<People> lList = new LinkedList<People>();
+		People pLast = null;
+		for (People p: people1 ) {
+			if (p.num == 0) {
+				lList.add(p);
+			} else {
+				if (pLast.num == p.num) {
+					 insert(p, lList, lList.indexOf(pLast));
+				} else {
+					insert(p, lList, 0);
+				}
+
+
+			}
+			pLast = p;
+
+		}
+		int [][]ordered = new int[people.length][2];
+		Iterator<People> pl = lList.iterator();
+		int i = 0;
+		while (pl.hasNext()) {
+			People p = pl.next();
+			ordered[i][0] = p.height;
+			ordered[i][1] = p.num;
+			i ++;
+		}
+		return ordered;
+	}
+
+	public int insert(People people, LinkedList<People> list, int preIndex) {
+		int index = 0;
+		int number = 0;
+		Iterator<People> pl = list.iterator();
+		LinkedList<People> newList = new LinkedList<>(list);
+		while(pl.hasNext()) {
+			People p = pl.next();
+			index ++ ;
+			if (p.height >= people.height) {
+				number ++;
+			}
+			if (number == people.num && index > preIndex) {
+				newList.add(index, people);
+				break;
+			}
+		}
+		list.clear();
+		list.addAll(newList);
+
+		return index;
+	}
+
+	public class People implements Comparable<People>{
+
+		public int height;
+		public int num;
+		public People (int height,int num) {
+			this.height = height;
+			this.num = num;
+		}
+		@Override
+		public int compareTo(People o) {
+			if (this.num == o.num) {
+				return this.height - o.height;
+			}
+			return this.num - o.num;
+		}
+	}
+
+	/**
+	 * 这个解题思路很强。 上面说最关键的是，插入。h从小到大的这个顺序，
+	 * 再按k排了之后，在正确的顺序里，h的那个顺序其实是相对没有变化的，只是按k顺序插入了一些而已。
+	 * 这个解题思路就是，按身高h排序,h相同按k排序,h先按从大到小的顺序走，再使用arrayList,利用add(index, item)方法依次插入，
+	 * index为k,那么相同k的值h大的在后面，h小的后插入在前面，和上述位置相对不变照应。而且，按h插入，后面插入的一定比前面小，item就直接是其位置。不需要调整。
+	 * 另外，排序使用的是二分排序
+	 * @param people
+	 * @return
+	 */
+
+	public int[][] reconstructQueueBest(int[][] people) {
+		if(people == null || people.length == 0)
+			return people;
+
+		int[][] buf = mergeSort(people);
+
+		List<int[]> res = new ArrayList<>(people.length);
+
+		res.add(buf[0]);
+
+		for(int i = 1; i < buf.length; i++){
+			res.add(buf[i][1],buf[i]);
+		}
+
+
+
+		res.toArray(buf);
+
+		System.out.println(" after sort");
+		for (int i = 0; i < buf.length ; i++) {
+			System.out.print("[" + buf[i][0] + "," + buf[i][1] + "]" + ",");
+		}
+		return buf;
+	}
+
+	private int[][] mergeSort(int[][] input) {
+
+		if (input == null || input.length < 2) //Sorting pre-check
+			return input;
+
+		int[][] buffer = new int[input.length][input[0].length];//Create buffer array
+		for (int i = 0; i < input.length; i++)//Initiate buffer array
+			buffer[i] = input[i];
+
+		//int[] buffer = input.clone();
+
+		mergeSorting(input, 0, input.length, buffer);//Split merge sort
+
+		return input;
+	}
+
+	private int[][] mergeSorting(int[][] input, int start, int end, int[][] buffer) {
+
+		if (end - start < 2) 	// If run size == 1
+			return input;		// Consider as sorted
+
+		int mid = (start + end) / 2;
+
+		// Recursively sort both half arrays BUT from buffer into input
+		// In this way, we don't have to update the other array after the merge
+		mergeSorting(buffer, start, mid, input);	//Sort left array
+		mergeSorting(buffer, mid, end, input);		//Sort right array
+
+		int i = start;
+		int j = mid;
+		System.out.println(" start: " + start + ", end: " + end);
+		for (int k = start; k < end; k++) {
+			if (i < mid && (j >= end || buffer[i][0] > buffer[j][0]))
+				input[k] = buffer[i++];
+			else if((i < mid && (j >= end || buffer[i][0] == buffer[j][0])))
+				input[k] = buffer[i][1] < buffer[j][1] ? buffer[i++] : buffer[j++];
+			else
+				input[k] = buffer[j++];
+		}
+		for (int k = 0; k < input.length; k ++) {
+			System.out.print("[" + input[k][0] + "," + input[k][1] + "]" + ",");
+		}
+		System.out.println();
+		return input;
+	}
+
+
+	//  顺手学习二分排序, 方法1，递归归并。方法解释为，从中间开始向两边化简，再中间再化简，到最简单的2位的比较，再合并，合并到最大的。
+	public int[]  binarySort(int[] array) {
+		for (int i = 0; i < array.length; i++) {
+			System.out.print(array[i] + " - ");
+
+		}
+		System.out.println();
+		splitSort(array, 0, array.length - 1);
+
+		for (int i = 0; i < array.length; i++) {
+			System.out.print(array[i] + " - ");
+
+		}
+		System.out.println();
+		return array;
+	}
+
+	public void splitSort(int[] array, int left, int right) {
+
+		if (left == right)
+			return;
+		int mid = (left + right) / 2;
+		splitSort(array, left, mid);
+		splitSort(array, mid + 1, right);
+		sort(array, left, right);
+	}
+
+	public void sort(int[] array, int left, int right){
+		int mid = (right + left) / 2 + 1;
+		int[] leftArray = new int[mid - left];
+		int[] rightArray = new int[right -  mid + 1];
+
+		for (int i = left; i <= right; i++) {
+			if (i < mid) {
+				leftArray[i - left] = array[i];
+			} else {
+				rightArray[i - mid] = array[i];
+			}
+		}
+
+
+		int i=0,j=0,k=left;
+		while (i < leftArray.length && j < rightArray.length) {
+			if (leftArray[i] < rightArray[j]) {
+				array[k++] = leftArray[i++];
+			} else {
+				array[k++] = rightArray[j++];
+			}
+		}
+
+		while (i < leftArray.length) {
+			array[k++] = leftArray[i++];
+		}
+		while(j < rightArray.length) {
+			array[k++] = rightArray[j++];
+		}
+
+	}
+
+	//  顺手学习二分排序, 方法2，循环查找，方法解释为，for循环，依次插入，一个个插入，前面则是有序的，每次插入新的数值只需找到插入的位置，即可。
+	// 故插入是将待插入的数的位置空出来，找到插入正确的位置，将后面的数往后挪。寻找插入位置的方法是折半查找。
+	public  void binaryInsertSort(int[] array) {
+		int i,j;
+		int low,high,mid;
+		int temp;
+		for(i=1;i<array.length;i++){
+			temp=array[i];
+			low=0;
+			high=i-1;
+			while(low<=high){
+				mid=(low+high)/2;
+				if(array[mid]>temp)
+					high=mid-1;
+				else
+					low=mid+1;
+
+			}
+			for(j=i-1;j>high;j--)
+				array[j+1]=array[j];
+			array[high+1]=temp;
+		}
+
+		for (int a: array) {
+			System.out.println(a);
+		}
+	}
+
 	public static void main(String[] args) {
 		Arithmetic a = new Arithmetic();
-		int[] nums = { 1, 2, 3 };
-		int[] nums1 = { 2, 1 };
-		int[] nums3 = { 2, 3, 1, 1, 4 };
-		int[] nums4 = { 1, 2, 1, 2, 5, 3 };
-		int[] nums5 = { 3, 1, 1, 1, 1 };
-
-		for (int i : a.singleNumber3(nums4)) {
-			System.out.println(i);
-		}
+//		int[] people = {6,5,3,7,8,9,1};
+		int [][] people = {{7, 0}, {4, 4}, {7, 1}, {5, 0}, {6, 1}, {5, 2}};
+		a.reconstructQueueBest(people);
 	}
 }
