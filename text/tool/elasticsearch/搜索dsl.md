@@ -2,6 +2,8 @@
 
 基于书 ElasticSearch服务器开发(第二版) 和官网doc(5.5)做的相应整理。
 
+粗略总结下，查询语句分为简单查询和复合查询，复合查询是由简单查询包装，简单查询可作为复合查询的子句，如bool查询示例。简单查询又分为full-text和exact，match相关的为full-text查询，查询的是经分析后的字段，term相关为确切查询为完整字段。
+
 ### 简单查询
 
 简单查询为针对某一特定field为某一特定value进行查询，如match, term, range。
@@ -30,11 +32,12 @@
         }
     }
 ```
-如上例，分析后将产生4个text， 类似为多条件，使用operator可设置多条件的连接纽带，or/and，默认是or。minimum_should_match参数为设置满足条件最小数。analyzer参数设置分析器。另外，还支持相关fuzziness模糊查询，以及高频词/低频词查询，这个跟书上的差不多(3.3.5)。
+如上例，分析后将产生4个text， 类似为多条件，使用operator可设置多条件的连接纽带，or/and，默认是or。minimum\_should\_match参数为设置满足条件最小数。analyzer参数设置分析器。另外，还支持相关fuzziness模糊查询，以及高频词/低频词查询，这个跟书上的差不多(3.3.5)。
 
 + match_phrase
 
 跟match布尔查询类似，不同的是，从分析后的文本中构建短语查询。
+
 ```
 //查询this test之间允许有2个词条的短语。则亦能匹配到"this is a test"
 "query": {
@@ -45,11 +48,11 @@
             }
         }
     }
- ```
+```
  
-+ match_phrase_prefix
++ match\_phrase\_prefix
 
-在match_phrase的基础上增加了允许查询文本的最后一个词条只做前缀匹配。
+在match\_phrase的基础上增加了允许查询文本的最后一个词条只做前缀匹配。
 
 ```
   "query": {
@@ -78,7 +81,7 @@
 
 + query string query
 
-书上说的是支持Lucene查询语法。doc上稍微有点模糊..模糊主要模糊在doc上的例子用了AND OR，Lucene上的且或不是这样写的啊🙊
+支持Lucene查询语法。
 
 + simple query string query
 
@@ -110,7 +113,7 @@ term查询的话，就是确切的，未经分析的词条。
     }
 ```
 
-+ range query
+#### range query
 
 范围查询
 ```
@@ -129,7 +132,7 @@ term查询的话，就是确切的，未经分析的词条。
 	//lt : Less-than
 ```
 
-+ exist query
+#### exist query
 
 会滤掉给定字段上没有值的文档,即返回的文档再给定字段上一定有值。
 ```
@@ -138,7 +141,7 @@ term查询的话，就是确切的，未经分析的词条。
     }
 ```
 
-+ prefix query
+#### prefix query
 
 前缀查询
 
@@ -150,7 +153,7 @@ term查询的话，就是确切的，未经分析的词条。
 	}
 ```
 
-+ Wildcard query
+#### Wildcard query
 
 通配符查询，*，?.
 ```
@@ -159,11 +162,11 @@ term查询的话，就是确切的，未经分析的词条。
     }
 ```
 
-+ regexp query
+#### regexp query
 
 正则匹配
 
-+ type query
+#### type query
 
 ```
  "query": {
@@ -173,7 +176,7 @@ term查询的话，就是确切的，未经分析的词条。
     }
 ```
 
-+ ids query
+#### ids query
 
 ```
         "ids" : {
@@ -182,7 +185,7 @@ term查询的话，就是确切的，未经分析的词条。
         }
 ```
 
-+ constant score query
+#### constant score query
 
 为查询/过滤返回的文档返回一个常量得分。
 
@@ -320,3 +323,5 @@ bool + bool
     }
 }
 ```
+
+curl -XGET 'localhost:9200/storm*/_analyze?field=message_infos.event.specificType' -d 'FRESH_AIR_VOLUME_LESS'

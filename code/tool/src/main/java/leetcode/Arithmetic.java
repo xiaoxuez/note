@@ -653,10 +653,78 @@ public class Arithmetic {
 		}
 	}
 
+	/**
+	 * TinyURL is a URL shortening service where you enter a URL such as https://leetcode.com/problems/design-tinyurl and it returns a short URL such as http://tinyurl.com/4e9iAk.
+	 Design the encode and decode methods for the TinyURL service. There is no restriction on how your encode/decode algorithm should work. You just need to ensure that a URL can be encoded to a tiny URL and the tiny URL can be decoded to the original URL.
+	 目的是实现URL短连接。实现思路为，长生成短，然后短找到长。生成短的过程呢，可以以某个特定的规律。这个人的这个规律真难
+	 */
+
+	Map<Integer, String> map1=new HashMap<Integer, String>();
+	Map<String, Integer> map2=new HashMap<String, Integer>();
+	String s="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
+	// Encodes a URL to a shortened URL.
+	public String encode1(String longUrl) {
+		if(!map2.containsKey(longUrl)) {
+			map1.put(map1.size()+1,longUrl);
+			map2.put(longUrl, map2.size()+1);
+		}
+		int n=map2.get(longUrl);
+		StringBuilder sb=new StringBuilder();
+		//首先每个longUrl的索引n是不同的，可以使用对62的商和余数唯一标识n，然后将s中相应位置的字符插入短连接即可。
+		while(n>0) {
+			//共有62个字符可以用于短连接的编码
+			int r=n%62;
+			n/=62;
+			sb.insert(0,s.charAt(r));
+		}
+		return sb.toString();
+	}
+
+	// Decodes a shortened URL to its original URL.
+	public String decode1(String shortUrl) {
+		int val=0;
+		int n=shortUrl.length();
+		for(int i=0;i<n;i++) {
+			val=val*62+s.indexOf(shortUrl.charAt(i));
+		}
+		return map1.get(val);
+	}
+
+	/**
+	 * Given a sorted array consisting of only integers where every element appears twice except for one element which appears once. Find this single element that appears only once.
+	 *  这个问题用亦或是可以解决，可是条件给了是已排好序的数组!!!! 所以应该用二分。
+	 * @param nums
+	 * @return
+	 */
+	public int singleNonDuplicate(int[] nums) {
+		if (nums == null || nums.length == 0)
+			return -1;
+
+		int low = 0;
+		int high = nums.length-1;
+
+		while (low < high) {
+			int mid = low + (high-low)/2;
+			if (mid % 2 == 0 && nums[mid] == nums[mid+1])
+				low = mid+1;
+			else if (mid % 2 == 1 && nums[mid] == nums[mid-1])
+				low = mid+1;
+			else
+				high = mid;
+		}
+
+		return nums[low];
+	}
+
+
+
+
 	public static void main(String[] args) {
 		Arithmetic a = new Arithmetic();
-//		int[] people = {6,5,3,7,8,9,1};
-		int [][] people = {{7, 0}, {4, 4}, {7, 1}, {5, 0}, {6, 1}, {5, 2}};
-		a.reconstructQueueBest(people);
+		System.out.println(a.singleNonDuplicate(new int[]{1, 1, 2, 2, 3, 4, 4}));
+
+
+
 	}
 }

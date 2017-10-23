@@ -1,6 +1,6 @@
 
 #!/bin/sh
-list_alldir(){
+list_alldir() {
     for file2 in `ls $1`
     do
         if [ x"$file2" != x"." -a x"$file2" != x".." ];then
@@ -14,5 +14,23 @@ list_alldir(){
         echo ""
     done
 }
-echo "$1"
-list_alldir "$1"
+
+list_relate_dir() {
+  for file2 in `ls $1`
+  do
+    if [ x"$file2" != x"." -a x"$file2" != x".." ];then
+      if [ -d "$1/$file2" ];then
+        if [ "$file2" == "$2" ];then
+          cd "$1/$file2"
+          ls
+          break
+        else
+          list_relate_dir "$1/$file2" "$2"
+          #statements
+        fi
+      fi
+    fi
+  done
+}
+# list_alldir "$1"
+list_relate_dir "$1" "$2"
