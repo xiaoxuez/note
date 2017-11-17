@@ -135,5 +135,12 @@ if(gt,0,1).if(eq,1,1)
 
 .es(index=storm_*, q='@type:sensor_before && message_infos.event.houseId:11419',metric='max:message_infos.event.humidityIn').points()
 ```
-
+message_infos.event.id=218
+message_infos.event.aqi.ch2o
+message_infos.event.aqi.co2
+message_infos.event.aqi.pm10
+message_infos.event.aqi.pm25
+message_infos.event.aqi.tvoc
+message_infos.event.pcStratege.pr
+ message_infos.event.ventSpeed
 
