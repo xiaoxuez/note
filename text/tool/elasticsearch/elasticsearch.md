@@ -34,6 +34,7 @@ Elasticsearch使用Lucene进行索引和搜索。Lucene，全文检索功能库�
 
 ### 常用curl
 
+
 + 集群相关
 
 	```
@@ -86,5 +87,58 @@ Elasticsearch使用Lucene进行索引和搜索。Lucene，全文检索功能库�
 	}
 	```
 	
-	
+### 索引管理操作
+ 
+ + 关闭/打开索引。
+
+ ```
+ 	POST /storm_2017-10-31/_close
+ 	curl -XPOST 'localhost:9200/storm_2017-10-31/_close'
+ 	curl -XPOST 'localhost:9200/storm_2017-10-31/_open'
+ ```
+ 
+ + 删除索引。
+
+ ```
+ 	DELETE /index_name
+ 	curl -XDELETE 'localhost:9200/index_name?pretty&pretty'
+ 	
+ ```
+ 
+ + 修改索引副本数, 可以将一些不重要而且比较老的数据设置副本数为0以节省磁盘空间
+
+ ```
+ 	curl -XPUT 'localhost:9200/<index_name>/_settings' -d '{"number_of_replicas": 0}'
+    
+ ```
+ 
+### 案例
+
+#### 某一索引为yellow原因及修复方法
+ 
+[原文连接](https://www.datadoghq.com/blog/elasticsearch-unassigned-shards/)
+
++ 查看某一副本分片未分配的原因
+
+```
+curl -XGET localhost:9200/_cat/shards?h=index,shard,prirep,state,unassigned.reason| grep UNASSIGNED
+```
+ 
+
++ 查看节点磁盘占用比例
+
+```
+curl -s 'localhost:9200/_cat/allocation?v'
+```
+
++ 设置当磁盘占用率达到多少时不再分配分片
+
+```
+    curl -XPUT 'localhost:9200/_cluster/settings' -d
+                      '{
+                               "transient": {
+                                 "cluster.routing.allocation.disk.watermark.low": "90%"
+                                    }
+                           }'
+```
 	
