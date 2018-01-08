@@ -717,12 +717,66 @@ public class Arithmetic {
 		return nums[low];
 	}
 
+    public int searchInsert(int[] nums, int target) {
+		int i = 0;
+		for (; i < nums.length; i ++) {
+			if (nums[i] < target) {
+				continue;
+			} else
+				break;
+		}
+		return i;
+    }
 
+	/**
+	 * 这个题是上面那个题的变体
+	 * Suppose an array sorted in ascending order is rotated at some pivot unknown to you beforehand.
+
+	 (i.e., 0 1 2 4 5 6 7 might become 4 5 6 7 0 1 2).
+
+	 You are given a target value to search. If found in the array return its index, otherwise return -1.
+
+	 You may assume no duplicate exists in the array.
+	 * @param nums
+	 * @param target
+	 * @return
+	 *
+	 * 要先看哪边有序，如果左边有序的话，按理左移的话，如果左边最头上比target还大，就往右边乱序的走
+	 */
+	public int searchInsertRotate(int[] nums, int target) {
+		if(nums==null || nums.length==0)
+			return -1;
+		int start = 0;
+		int end = nums.length - 1;
+		while(start <= end) {
+
+			int mid = start + (end - start) / 2;
+			System.out.println("start=" + start + "; end=" + end + ", mid=" + mid);
+			if (nums[mid] == target) {
+				return mid;
+			}
+			if (nums[mid] < nums[end]) {
+				//右边肯定是有序的
+				if (nums[mid] < target && nums[end] >= target) {
+					start = mid + 1;
+				} else {
+					end = mid - 1;
+				}
+			} else {
+				if (nums[mid] > target && nums[start] <= target) {
+					end = mid - 1;
+				} else {
+					start = mid + 1;
+				}
+			}
+		}
+		return -1;
+	}
 
 
 	public static void main(String[] args) {
 		Arithmetic a = new Arithmetic();
-		System.out.println(a.singleNonDuplicate(new int[]{1, 1, 2, 2, 3, 4, 4}));
+		System.out.println(a.searchInsertRotate(new int[]{4, 5, 6, 7, 0, 1, 2}, 2));
 
 
 

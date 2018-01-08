@@ -1,8 +1,11 @@
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.chrono.ChronoLocalDate;
+import java.time.chrono.MinguoDate;
 import java.time.temporal.TemporalField;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.function.Supplier;
@@ -109,15 +112,22 @@ public class Java8Test {
             System.out.println(localDateTime.minusWeeks(1));
             //星期加1个星期,返回新的对象，原对象不变
             System.out.println(localDateTime.plusWeeks(1));
-
-
+//            ChronoLocalDate date = ChronoLocalDate.
+            MinguoDate d = MinguoDate.now();
+//            d.
         }
 
         public static void main(String[] args) {
-            NewDateClass newDateClass = new NewDateClass();
-            newDateClass.testClock();
-
-            newDateClass.testLocalDateTime();
+            String x = "2461,2462,2463,2464,2465,2466,2467,2468,2470,2471,2472,2473,2474,2475,2476,2477,2478,2480,2481,2602";
+            String[] x1 = x.split(",");
+            String y= "";
+            System.out.println(x1.length);
+            for (int i=0;i<x1.length;i++) {
+                y += x1[i] + " OR ";
+            }
+            Calendar c = Calendar.getInstance();
+            c.set(Calendar.DAY_OF_MONTH, 25);
+            System.out.println(c.get(Calendar.DAY_OF_WEEK));
         }
     }
 

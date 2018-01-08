@@ -94,7 +94,7 @@ bin/rails generate model Article title:string text:text //创建模型
 模型生成器会生成模型对象，以及数据库相关文件。
 
 
---
+------
 
 
 ## 实践之路
@@ -174,7 +174,13 @@ https://app.yinxiang.com/shard/s66/nl/2147483647/68cfd2c9-b81d-4940-bc29-0c8dd27
 	end
   ```
   这个属性是什么意思呢，就是model继承的话，会默认添加一个string的type字段，会记录子类的class名。如Firm继承自Company，当你使用 Firm.create(name: "37signals"), 会在companies表中添加一条type = “Firm”的记录. 当你查询Company.where(name: '37signals').first 的时候会返回一个Firm对象
-  
+
++ 声明抽象类(暂时就叫它叫抽象类吧，就是用于继承的，自己是不具备实例的(model的话就是没有表，一般用于许多表都是某个特定链接的数据库，可将特定链接作为抽象类))
+	
+	```
+		self.abstract_class = true
+	```
+	
 + 验证，在存入数据库之前对数据进行有效验证，类似
 
  ```
@@ -185,3 +191,57 @@ https://app.yinxiang.com/shard/s66/nl/2147483647/68cfd2c9-b81d-4940-bc29-0c8dd27
  
 + 爬坑之一，react里form进行post会自动顺溜一条get请求，解决方式为在form里加上属性data-remote="true"
 
+
+### 小大事件记录
+
++ 关于post会自动顺溜一条get请求的故事，主要发生在form里，后来我基本都用div替换了form了..data-remote="true"的解决方法似乎可行。
+
++ erb，之前一直没有正确的认识。这里可以直接写html元素，跟写.html差不多，当需要使用ruby变量时，需要使用<%= %>的语法，返回值为string。如果erb中需要把ruby变量变成js对象。如
+
+	```
+	 data_json = '<%=raw @data.to_json %>';
+     data = JSON.parse(data_json)
+	```
+
++ 在erb中插入图片。
+
+	```
+	<%= image_tag 'airguru-plug-new-controller.png', class: 'starting-config-img' %>
+	```
+	
+	另，在<%= %>中使用js类似语法javascript_tag
+	
++ rails中使用react
+
+	```
+	gem 'react-rails'
+	```
+	
++ erb中使用插件，如果gem安装起来比较费劲的话，可以直接script注入，注入的位置可以是在总application.html.erb中，也可以在自己的erb中，看情况而定吧。
+	
++ 使用capistrano进行部署，很多配置文件都需要在shared文件中写，缺什么就补什么吧。关于asset打包的问题，倒是没怎么好好的解决，cap deploy并不会打包assert, 回头就写了个脚本，自己打包asset然后复制到线上shared/public/asserts中,deploy会自动链接shared/public/asserts。虽然很挫，将就了吧。
+
+ ```
+	#! /bin/bash
+	
+	# a script for depoly with assets:precompile before cap
+	# i dont find an effective method of capistrano to finish it, so this  script instead
+	#
+	
+	
+	rake assets:precompile RAILS_ENV=production
+	cd /Users/xiaoxuez/back-end/airguru-plug/public
+	tar zcvf assets.tar.gz assets/
+	scp assets.tar.gz ***@***.**.*:/tmp
+	rm assets.tar.gz
+	ssh ***@***.**.* <<'ENDSSH'
+	  cd /data/project/airguru-plug/shared/public/
+	  rm -rf assets/
+	  mv /tmp/assets.tar.gz ./
+	  tar zxvf assets.tar.gz
+	  rm assets.tar.gz
+	ENDSSH
+	cd /Users/xiaoxuez/back-end/airguru-plug
+	bundle exec cap production deploy
+	 
+ ```
