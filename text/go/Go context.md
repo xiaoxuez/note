@@ -73,3 +73,15 @@ func A(ctx context.Context) int {
 }
 ```
 
+
+
+--
+
+顺便粘一下另外的结束标志
+
+	// trap SIGINT to trigger a shutdown.
+	signals := make(chan os.Signal, 1)
+	signal.Notify(signals, os.Interrupt)
+	
+	case <-signals:
+			return

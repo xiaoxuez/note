@@ -13,8 +13,8 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Kafka Producer
  */
 public class Producer {
-    private final KafkaProducer<Integer, String> producer;
-    private final String topic;
+    public final KafkaProducer<Integer, String> producer;
+    private  String topic;
     private final Boolean isAsync;
     private static AtomicInteger messageNo = new AtomicInteger(100);
 
@@ -22,13 +22,16 @@ public class Producer {
         Properties props = new Properties();
         props.put("bootstrap.servers", KafkaProperties.KAFKA_SERVER_URL + ":" + KafkaProperties.KAFKA_SERVER_PORT);
         props.put("client.id", "DemoProducer");
-        props.put("key.serializer", "org.apache.kafka.common.serialization.IntegerSerializer");
+        props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
         props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
         producer = new KafkaProducer<>(props);
         this.topic = topic;
         this.isAsync = isAsync;
     }
 
+    public void setTopic(String topic) {
+        this.topic = topic;
+    }
 
     public void sendMsg() {
         String messageStr = "Message_" + messageNo;
@@ -43,6 +46,25 @@ public class Producer {
                         messageNo.getAndIncrement(),
                         messageStr)).get();
                 System.out.println("Sent message: (" + messageNo.get() + ", " + messageStr + ")");
+
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void sendMsg(String key, String value) {
+        long startTime = System.currentTimeMillis();
+        if (isAsync) { // Send asynchronously
+            producer.send(new ProducerRecord(topic,
+                    key,
+                    value), new ProducerCallback(startTime, 0, value));
+        } else { // Send synchronously
+            try {
+                producer.send(new ProducerRecord(topic,
+                        key,
+                        value)).get();
+                System.out.println("Sent message: (" + key + ", " + value + ")");
 
             } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
@@ -68,7 +90,17 @@ public class Producer {
     }
 
     public static void main(String[] args) throws InterruptedException {
-        testAsyncTrue();
+//        testAsyncTrue();
 //        testAsyncFalse();
+        Producer producer = new Producer("consumerTestForUneven", false);
+//        producer.setTopic("ag_sensor");
+        //{}
+//        producer.sendMsg("ag_sensor", "{\"pm25\": 40, \"sensor_id\": 19}");
+//        {"actions":[{"action":"predict"}],"serial":"test1234","context":"asdfe","return_partitions":[1,2],"service_id":1}
+//        {"actions":[{"info":{"type":11,"dial":0.3},"action":"control"}],"serial":"test1234","context":"asdfe","return_partitions":[1,2],"service_id":1}
+        producer.setTopic("ld_control_result");
+        producer.sendMsg("ld_control_result", "{\"result\": 101,\"serial\":\"ldctrl665247824\",\"context\":\"asdfe\", \"details\":[]}");
+//        producer.sendMsg("ld_control_result","{\"actions\":[{\"info\":{\"type\":11,\"dial\":0.3},\"action\":\"control\"}],\"serial\":\"test1234\",\"context\":\"asdfe\",\"return_partitions\":[0],\"service_id\":1}");
+        producer.producer.close();
     }
 }

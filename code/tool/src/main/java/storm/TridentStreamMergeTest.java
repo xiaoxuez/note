@@ -25,21 +25,18 @@ public class TridentStreamMergeTest {
 
 
     public static void main(String[] args) {
-//        TridentTopology tridentTopology = new TridentTopology();
-//        Stream stream1 = tridentTopology.newStream("one", new OneStream())
-//                .each(new Fields("one-msg"), new OutputFunction(), new Fields("one-out"));
-//
-//        Stream stream2 =  tridentTopology.newStream("two", new TwoStream())
-//                .each(new Fields("two-msg"), new OutputFunction(), new Fields("two-out"));
-//
-//        tridentTopology.merge(stream1, stream2)
-//                .each(new Fields("one-out"), new OutputFunction(), new Fields());
-//        LocalCluster cluster = new LocalCluster();
-//        cluster.submitTopology("merge-test", new Config(), tridentTopology.build());
+        TridentTopology tridentTopology = new TridentTopology();
+        Stream stream1 = tridentTopology.newStream("one", new OneStream())
+                .each(new Fields("one-msg"), new OutputFunction(), new Fields("one-out"));
 
-        Boolean a = true;
-        Boolean b = true;
-        System.out.println(a^b);
+        Stream stream2 =  tridentTopology.newStream("two", new TwoStream())
+                .each(new Fields("two-msg"), new OutputFunction(), new Fields("two-out"));
+
+        tridentTopology.merge(stream2, stream1)
+                .each(new Fields("two-out"), new OutputFunction(), new Fields());
+        LocalCluster cluster = new LocalCluster();
+        cluster.submitTopology("merge-test", new Config(), tridentTopology.build());
+
     }
 
 

@@ -114,6 +114,41 @@ Elasticsearch使用Lucene进行索引和搜索。Lucene，全文检索功能库�
     
  ```
  
+ 
+ 
+#### 一个相对比较完全查询示例
+ 
+ ```
+	{
+  "query":{
+    "bool":{
+      "must":{"match_all":{}},
+      "filter":[
+        {"term":{"op": 25677}},
+        {"term":{"parsed":true}},
+        {"term": {"device_addr": 53784}},
+        {"term": {"cmd.data.index": 0}},
+        {"range":{
+          "@timestamp":{
+            "from":"2017-12-14T07:00:53.000+00:00",
+            "to":"2017-12-14T10:41:53.000+00:00"
+            }}
+        }
+      ]
+    }
+  },
+  "script_fields": {
+    "gm_data_0": {
+      "script": "if(doc['op'].value == 25677 && params['_source']['cmd']['data'] != null) { for(def item : params['_source']['cmd']['data']) { if(item.index == 0)  return item.data_value;  }} return null;"
+    }
+  }, 
+  "size":50,
+  "from":0,
+  "sort":{"@timestamp":"desc"},
+  "timeout":"51s"
+} 
+ ```
+ 
 ### 案例
 
 #### 某一索引为yellow原因及修复方法
